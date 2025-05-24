@@ -1,0 +1,42 @@
+# Ignore Python bytecode
+*.pyc
+__pycache__/
+
+# Ignore virtual environment directories
+venv/
+.venv/
+env/
+
+# Ignore build artifacts
+dist/
+build/
+*.egg-info/
+
+# Ignore test coverage reports
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# Ignore editor/IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore dataset files (if large)
+# datasets/
+
+# Ignore model checkpoints/weights (if large)
+# models/*.pth
+# models/*.h5
+
+# Ignore logs
+*.log
+
+# Ignore configuration files that might contain sensitive info
+# config/*.ini
+# config/*.json
+
+# Ignore environment variables file
+.env

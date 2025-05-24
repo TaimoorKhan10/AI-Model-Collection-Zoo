@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Model Zoo Pro</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .model-selection, .prediction-form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        #prediction-result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            word-wrap: break-word; /* Break long words */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Model Zoo Pro</h1>
+        <p>Select a model and provide input features to get a prediction.</p>
+
+        <div class="model-selection">
+            <h2>Select Model</h2>
+            <label for="model-select">Choose a model:</label>
+            <select id="model-select">
+                <option value="simple_pytorch">Simple PyTorch Model</option>
+                <option value="simple_sklearn">Simple scikit-learn Model</option>
+                <option value="simple_tensorflow">Simple TensorFlow Model</option>
+                <option value="complex_tensorflow_cnn">Complex TensorFlow CNN Model</option>
+                <option value="simple_keras">Simple Keras Model</option>
+                <option value="simple_rnn">Simple RNN Model</option>
+                <option value="simple_linear_regression">Simple Linear Regression Model</option>
+                <option value="simple_kmeans">Simple K-Means Model</option>
+                <!-- Add options for other models here -->
+            </select>
+        </div>
+
+        <div class="prediction-form">
+            <h2>Input Features</h2>
+            <label for="features-input">Enter features (as a comma-separated list of numbers):</label>
+            <textarea id="features-input" rows="5" placeholder="e.g., 0.1, 0.2, 0.3, ..."></textarea>
+            <button id="predict-button">Get Prediction</button>
+        </div>
+
+        <div id="prediction-result">
+            <h2>Prediction Result</h2>
+            <p>Prediction will appear here...</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predict-button').addEventListener('click', async () => {
+            const modelName = document.getElementById('model-select').value;
+            const featuresInput = document.getElementById('features-input').value;
+            const resultDiv = document.getElementById('prediction-result');
+
+            try {
+                // Parse features input
+                const features = featuresInput.split(',').map(f => parseFloat(f.trim())).filter(f => !isNaN(f));
+
+                if (features.length === 0) {
+                    resultDiv.innerHTML = '<h2>Prediction Result</h2><p style="color: red;">Please enter valid features.</p>';
+                    return;
+                }
+
+                // Make API call
+                // The API is expected to run on http://localhost:5000
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ model_name: modelName, features: features })
+                });
+
+                const data = await response.json();
+
+                // Display result
+                if (response.ok) {
+                    resultDiv.innerHTML = `<h2>Prediction Result</h2><p>${JSON.stringify(data.prediction, null, 2)}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<h2>Prediction Result</h2><p style="color: red;">Error: ${data.error || 'Unknown error'}</p>`;
+                }
+
+            } catch (error) {
+                resultDiv.innerHTML = `<h2>Prediction Result</h2><p style="color: red;">An error occurred: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

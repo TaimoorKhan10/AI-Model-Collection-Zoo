@@ -1,0 +1,9 @@
+# Project dependencies
+
+numpy
+scipy
+pandas
+torch
+tensorflow
+scikit-learn
+Flask
